@@ -1,0 +1,18 @@
+FROM python:3.9.14-slim-bullseye
+
+# RUN pip3 install --upgrade pip
+
+WORKDIR /workspace
+
+COPY requirements.txt requirements.txt
+
+# Install the build-essential package (which includes gcc) and any other dependencies
+RUN apt-get update && apt-get install -y build-essential
+
+RUN pip3 install --upgrade pip && pip3 install -r requirements.txt && rm -rf /root/.cache/pip
+
+COPY . .
+
+RUN pip install -e .
+
+# CMD ["python", "classifier/train.py","classifier/eval.py","classifier/predict.py"]

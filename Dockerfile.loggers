@@ -1,0 +1,21 @@
+FROM python:3.9
+
+# RUN apt-get update -y && \
+#  	apt-get install -y make && \
+#  	apt-get install -y libffi-dev gcc && \
+# 	apt-get install -y python3-dev
+
+RUN pip3 install --upgrade pip
+
+RUN pip3 install mlflow aim>=3.16.2 tensorboard
+
+WORKDIR /workspace
+
+# HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health
+
+#CMD ["python","infer.py"]
+
+#COPY ../starter_script.sh /workspace/starter_script.sh
+# COPY setup.py /workspace/
+
+#CMD ./starter_script.sh

@@ -1,0 +1,4 @@
+[console_scripts]
+classifier_eval = classifier.eval:main
+classifier_predict = classifier.predict:main
+classifier_train = classifier.train:main

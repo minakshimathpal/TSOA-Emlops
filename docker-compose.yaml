@@ -1,0 +1,50 @@
+version: '3.9'
+services:
+  train:
+    build:
+      context: ./
+      dockerfile: Dockerfile.train    
+    container_name: emlo_image_classifier
+    volumes:
+      - ./logs:/workspace/logs
+    command: dl_pkg_train -m hydra/launcher=joblib hydra.launcher.n_jobs=5 experiment=cifar_vit model.net.patch_size=1,2,4,8,16 data.num_workers=0
+
+  ml_flow:
+    build:
+      context: ./
+      dockerfile: Dockerfile.loggers
+
+    container_name: mlflow
+    volumes:
+      - ./logs/mlflow:/workspace/mlflow
+    expose:
+      - 5000
+    ports:
+      - 5001:5000
+    command: mlflow ui -h 0.0.0.0  
+
+  aim:
+    build:
+      context: ./
+      dockerfile: Dockerfile.loggers
+    container_name: aim
+    volumes:
+      - ./logs/.aim:/workspace/.aim
+    expose:
+      - 43800
+    ports:
+      - 43801:43800
+    command: aim up -h 0.0.0.0
+
+  tensorboard:
+    build:
+      context: ./
+      dockerfile: Dockerfile.loggers
+    container_name: tensorboard
+    volumes:
+      - ./logs/tensorboard/:/workspace/tensorboard
+    expose:
+      - 6006
+    ports:
+      - 6007:6006
+    command: tensorboard --logdir . --host 0.0.0.0
